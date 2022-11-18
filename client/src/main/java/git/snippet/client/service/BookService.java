@@ -20,12 +20,18 @@ public class BookService {
     public BookService(ReactiveCircuitBreakerFactory circuitBreakerFactory) {
         this.webClient = WebClient.builder().baseUrl("http://localhost:8090").build();
         this.readingListCircuitBreaker = circuitBreakerFactory.create("recommended");
+        // 如果要配置一些策略，使用如下方式
+/*        this.readingListCircuitBreaker = circuitBreakerFactory.configureDefault(
+                id -> new Resilience4JConfigBuilder(id)
+                .timeLimiterConfig(timeLimiterConfig)
+                .circuitBreakerConfig(circuitBreakerConfig)
+//                .build()).create("recommended");*/
     }
 
     public Mono<String> readingList() {
         return readingListCircuitBreaker.run(webClient.get().uri("/recommended").retrieve().bodyToMono(String.class), throwable -> {
             LOG.warn("Error making request to book service", throwable);
-            return Mono.just("Cloud Native Java (O'Reilly)");
+            return Mono.just("local store book");
         });
     }
 }

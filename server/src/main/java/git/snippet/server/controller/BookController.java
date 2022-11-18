@@ -8,6 +8,6 @@ import reactor.core.publisher.Mono;
 public class BookController {
     @RequestMapping(value = "/recommended")
     public Mono<String> readingList() {
-        return Mono.just("Spring in Action (Manning), Cloud Native Java (O'Reilly), Learning Spring Boot (Packt)");
+        return Mono.just("book1,book2,book3");
     }
 }
